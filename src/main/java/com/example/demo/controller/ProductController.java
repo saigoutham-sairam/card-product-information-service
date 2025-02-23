@@ -5,12 +5,16 @@ import com.example.demo.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -26,16 +30,38 @@ class ProductController {
 
     }
 
+//    @GetMapping
+//    public
+//    List<UnifiedProduct> getAllUnifiedProduct() throws IOException {
+//        return productService.getProductInformationList(parseListAsString());
+//    }
+
     @GetMapping
     public
-    List<UnifiedProduct> getAllUnifiedProduct() throws IOException {
-        return productService.getProductInformationList(parseListAsString());
+    ResponseEntity<?> getProduct(@RequestParam(required = false) String productUid,@RequestParam(required = false) String productType) throws IOException {
+
+        List<UnifiedProduct> productList = productService.getProductInformationList(parseListAsString());
+
+        if (productUid != null) {
+            return productList.stream()
+                    .filter(product -> product.productUid().equalsIgnoreCase(productUid))
+                    .findFirst()
+                    .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                    .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }else if (productType != null) {
+            List<UnifiedProduct> filteredProducts = productList.stream()
+                    .filter(product -> product.productType().equalsIgnoreCase(productType))
+                    .collect(Collectors.toList());
+            return new ResponseEntity<>(filteredProducts, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(productList, HttpStatus.OK);
+        }
     }
 
     private
     List<UnifiedProduct> printAllProductDetails() {
         Set<UnifiedProduct> UnifiedProductSet = new HashSet<>();
-        UnifiedProductSet.add(new UnifiedProduct("6447344", "BASIC", "Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-responsibly-sourced-scottish-salmon-fillet-x2-240g", 15.63, "kg", 1));
+        UnifiedProductSet.add(new UnifiedProduct("6447344", "BASIC-Meat", "Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-responsibly-sourced-scottish-salmon-fillet-x2-240g", 15.63, "kg", 1));
         UnifiedProductSet.add(new UnifiedProduct("7947559", "BASIC", "Sainsbury's Houmous 200g", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-houmous-200g", 0.5, "g", 100));
         UnifiedProductSet.add(new UnifiedProduct("3052068", "BASIC", "Sainsbury's Mixed Peppers 3 pack", "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-mixed-peppers-3-pack", 1.5, "each", 1));
 
