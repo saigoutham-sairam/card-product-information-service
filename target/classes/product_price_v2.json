@@ -58,5 +58,11 @@
     "unit_price": 5.84,
     "unit_price_measure": "kg",
     "unit_price_measure_amount": 1
+  },
+  {
+    "product_uid": "345678",
+    "unit_price": 5.84,
+    "unit_price_measure": "Test Kg",
+    "unit_price_measure_amount": 1
   }
 ]

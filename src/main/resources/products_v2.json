@@ -58,5 +58,11 @@
     "product_type": "BASIC2",
     "name": "Sainsbury's Thick Unsmoked Back Bacon Rashers x6 300g",
     "full_url": "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-thick-unsmoked-bacon-rasher-x6-300g"
+  },
+  {
+    "product_uid": "7640075",
+    "product_type": "TEST",
+    "name": "This is extra item added for testing",
+    "full_url": "https://www.sainsburys.co.uk/gol-ui/product/sainsburys-thick-unsmoked-bacon-rasher-x6-300g"
   }
 ]
